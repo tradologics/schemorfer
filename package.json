@@ -1,0 +1,34 @@
+{
+  "name": "@tradologics/schemorfer",
+  "version": "0.0.1",
+  "description": "The JSON Schema Transformer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tradologics/schemorfer.git"
+  },
+  "keywords": [
+    "json schema",
+    "json converter"
+  ],
+  "author": "Tradologics",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/tradologics/schemorfer/issues"
+  },
+  "homepage": "https://github.com/tradologics/schemorfer#readme",
+  "dependencies": {
+    "ajv": "^6.12.2",
+    "safe-eval": "^0.4.1"
+  },
+  "directories": {
+    "example": "examples"
+  },
+  "devDependencies": {},
+  "publishConfig": {
+    "access": "public"
+  }
+}
