@@ -91,7 +91,7 @@ const looper = (mapper, obj) => {
                 used.push(val.$from.split('::')[0]);
             }
             let res = parser(key, val);
-            if (res) obj[key] = res;
+            if (res && res !== null) obj[key] = res;
         }
     }
 };
@@ -120,7 +120,6 @@ const parser = (key, val) => {
         }
 
         const from = getProperty(source, val.$if.$from, getProperty(val, "$default"));
-
         let isTrue = false;
 
         if (val.$if.hasOwnProperty('$is')) {
