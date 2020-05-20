@@ -186,7 +186,7 @@ const parser = (key, val) => {
 
 const transform = (data, mapper, mergeUnmapped) => {
 
-    mergeUnmapped = mergeUnmapped || true;
+    mergeUnmapped = (mergeUnmapped) ? mergeUnmapped : false;
     source = {};
     used = [];
     newjson = {};
