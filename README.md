@@ -24,32 +24,6 @@ $ npm install @tradologics/schemorfer
 
 # Usage
 
-## Validate
-
-
-```javascript
-const schemorfer = require('schemorfer');
-
-// option 1
-const payload = require('./post-payload.json');
-const schema = require('./post-schema.json');
-const valid = schemorfer.validate(payload, schema);
-
-// option 2
-// const valid = schemorfer.validate(
-//     './post-payload.json', './post-schema.json');
-
-if (!valid) {
-    console.error(schemorfer.errors());
-}
-
-// payload now has all the optional fields populated with the defaults
-console.log(valid);
-```
-
-
-## Transform
-
 ```javascript
 const schemorfer = require('schemorfer');
 
@@ -87,3 +61,30 @@ console.log(newData);
     - $value = hard coded value
 - :: = nested source
 ```
+
+\* More docs coming soon 🙂
+
+---
+
+## JSON Schema Validation
+
+```javascript
+const schemorfer = require('schemorfer');
+
+// option 1
+const payload = require('./post-payload.json');
+const schema = require('./post-schema.json');
+const valid = schemorfer.validate(payload, schema);
+
+// option 2
+// const valid = schemorfer.validate(
+//     './post-payload.json', './post-schema.json');
+
+if (!valid) {
+    console.error(schemorfer.errors());
+}
+
+// payload now has all the optional fields populated with the defaults
+console.log(valid);
+```
+
