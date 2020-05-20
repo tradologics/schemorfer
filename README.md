@@ -10,11 +10,12 @@
 
 
 **Schemorfer** is a JSON Schema transformation library.
-It converts the source `json` structure to a different one, based on a supplied **map** `json` file, which contains instructions on how to convert each element.
 
-Schemorfer also have the option to **validates** the shcame against a valid e [JSON Schema](https://json-schema.org/understanding-json-schema/index.html) file. It uses [Ajv](https://github.com/ajv-validator/ajv) under the hood to validate, assign defaults to optional/empty properties, and remove empty properties from the source `json` data.
+It converts the source `JSON` structure to a different one, based on a supplied **map** `JSON` file, which contains instructions on how to convert each element.
 
-**Schemorfer** was developed by [Tradologics](https://tradologics.com) for converting various JSON payloads from various API providers into a standardized, pre-defined format.
+Schemorfer also has the option to **validates** the schema against a valid e [JSON Schema](https://json-schema.org/understanding-json-schema/index.html) file. It uses [Ajv](https://github.com/ajv-validator/ajv) under the hood to validate, assign defaults to optional/empty properties, and remove empty properties from the source `JSON` data.
+
+**Schemorfer** was developed by [Tradologics](https://tradologics.com) to convert various JSON payloads from various API providers into a standardized, pre-defined format.
 
 ## Install
 
