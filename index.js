@@ -91,7 +91,7 @@ const looper = (mapper, obj) => {
                 used.push(val.$from.split('::')[0]);
             }
             let res = parser(key, val);
-            if (res && res !== null) obj[key] = res;
+            obj[key] = res;
         }
     }
 };
@@ -183,9 +183,14 @@ const parser = (key, val) => {
 };
 
 
-const transform = (data, mapper, mergeUnmapped) => {
+const transform = (data, mapper, options) => {
 
-    mergeUnmapped = (mergeUnmapped) ? mergeUnmapped : false;
+    options = options || {};
+    let config = {
+        mergeUnmapped: getProperty(options, 'mergeUnmapped', false),
+        keepNulls: getProperty(options, 'keepNulls', true),
+    };
+
     source = {};
     used = [];
     newjson = {};
@@ -207,15 +212,15 @@ const transform = (data, mapper, mergeUnmapped) => {
     looper(mapper, newjson);
 
     // cleanup:
-    newjson = JSON.stringify(newjson);
-    while (newjson.indexOf('null') !== -1) {
+    if (!config.keepNulls) {
+        newjson = JSON.stringify(newjson);
         newjson = newjson.replace(/{"\w+":null}/gm, null);
-        newjson = newjson.replace(/,"\w+":null,/gm, ',');
+        newjson = newjson.replace(/(,?)"\w+":null(,?)/gm, ',');
+        newjson = newjson.replace(',}', '}');
+        newjson = JSON.parse(newjson);
     }
-    newjson = JSON.parse(newjson);
 
-
-    if (mergeUnmapped) {
+    if (config.mergeUnmapped) {
         let orphans = {};
         used = [...new Set(used)];
         const reduced = Object.keys(data).filter((el) => !used.includes(el));
