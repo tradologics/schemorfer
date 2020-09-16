@@ -26,7 +26,7 @@ $ npm install @tradologics/schemorfer
 # Usage
 
 ```javascript
-const schemorfer = require('schemorfer');
+const schemorfer = require('@tradologics/schemorfer');
 
 // option 1
 const data = require('./post-payload.json');
