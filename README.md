@@ -1,4 +1,4 @@
-<img src="https://github.com/tradologics/schemorfer/blob/master/assets/logo.png?raw=true" height="72">
+<img src="https://github.com/tradologics/schemorfer/blob/main/assets/logo.png?raw=true" height="72">
 
 # The JSON Object Transformer
 
