@@ -30,7 +30,7 @@ const schemorfer = require('@tradologics/schemorfer');
 
 // option 1
 const data = require('./post-payload.json');
-const schema = require('./post-mapper.json');
+const mapper = require('./post-mapper.json');
 const newData = schemorfer.transform(data, mapper);
 
 // option 2
