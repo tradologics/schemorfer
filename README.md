@@ -44,7 +44,7 @@ console.log(newData);
 ### Keywords
 
 ```
-- $from = source key (required)
+- $from = source key
 - $default = default value (if empty, undefined, or null)
 - $rename = array-based rename
 - $if
@@ -61,6 +61,9 @@ console.log(newData);
     - $from = source key
     - $value = hard coded value
 - :: = nested source
+- $function - optional function to manipulate the value
+    $arguments - comma separated list of arguments
+    $body - function body as string
 ```
 
 \* More docs coming soon 🙂
