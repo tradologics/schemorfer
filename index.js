@@ -181,6 +181,11 @@ const parser = (key, val) => {
         }
     }
 
+    if (val.hasOwnProperty('$function')) {
+        const x = new Function(val.$function.arguments, val.$function.body);
+        output = x(output);
+    }
+
     return output;
 };
 
