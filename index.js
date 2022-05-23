@@ -103,6 +103,8 @@ const parser = (key, val) => {
     // from & default
     if (val.hasOwnProperty('$from')) {
         output = getProperty(source, val.$from, getProperty(val, "$default"));
+    } else if (val.hasOwnProperty('$default')) {
+        output = val.$default;
     }
 
     // if/then/else
