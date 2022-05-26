@@ -61,11 +61,17 @@ console.log(newData);
     - $from = source key
     - $value = hard coded value
 - :: = nested source
-- $function - optional function to manipulate the value
-    $arguments - comma separated list of arguments
-    $body - function body as string
+- $apply - optional function to manipulate the value (`value` is passed as parameter)
 ```
 
+`$apply` example:
+```
+{
+  ...
+  "$apply": "return value.toUpperCase()"
+  ...
+}
+```
 \* More docs coming soon 🙂
 
 ---

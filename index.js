@@ -21,10 +21,16 @@
 const fs = require('fs');
 const safeEval = require('safe-eval');
 const Ajv = require('ajv');
+const { X509Certificate } = require('crypto');
 
 const ajv = new Ajv({ allErrors: true, useDefaults: true });
 
 let source = {}, used = [], newjson = {};
+
+const asArray = (item) => {
+    if (item === undefined) return [];
+    return Array.isArray(item) ? item : [item];
+};
 
 class SchemorferMapError extends Error {
     constructor(validationErrors) {
@@ -91,7 +97,9 @@ const looper = (mapper, obj) => {
                 used.push(val.$from.split('::')[0]);
             }
             let res = parser(key, val);
-            obj[key] = res;
+            if (res) {
+                obj[key] = res;
+            }
         }
     }
 };
@@ -125,7 +133,7 @@ const parser = (key, val) => {
         let isTrue = false;
 
         if (val.$if.hasOwnProperty('$is')) {
-            isTrue = (from === val.$if.$is);
+            isTrue = asArray(val.$if.$is).includes(from);
         }
 
         else if (val.$if.hasOwnProperty('$typeof')) {
@@ -181,9 +189,11 @@ const parser = (key, val) => {
         }
     }
 
-    if (val.hasOwnProperty('$function')) {
-        const x = new Function(val.$function.$arguments, val.$function.$body);
-        output = x(output);
+    if (output && val.hasOwnProperty('$apply')) {
+        try {
+            const x = new Function("value", val.$apply);
+            output = x(output);
+        } catch(er){}
     }
 
     return output;
