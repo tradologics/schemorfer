@@ -51,13 +51,13 @@ console.log(newData);
     - $prop = the property to check against
     - $is (for true/false)
     - $typeof
-    - $condition
+    - $condition, either
         - $type = simple/const (default = simple)
         - $const = eval statement
-- $then (required for if)
+- $then (required for if), either
     - $from = source key
     - $value = hard coded value
-- $else
+- $else, either
     - $from = source key
     - $value = hard coded value
 - :: = nested source

@@ -2,7 +2,7 @@
  * Schemorfer - The JSON Schema Transformer
  * https://github.com/tradologics/schemorfer
  *
- * Copyright 2020 Tradologics, Inc.
+ * Copyright 2022 Tradologics, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,17 @@
 
 
 const fs = require('fs');
-const safeEval = require('safe-eval');
 const Ajv = require('ajv');
-const { X509Certificate } = require('crypto');
+// const { X509Certificate } = require('crypto');
 
 const ajv = new Ajv({ allErrors: true, useDefaults: true });
 
 let source = {}, used = [], newjson = {};
+
+const safeEval = (code, context) => {
+    const x = new Function(Object.keys(context).join(','), code);
+    return x(Object.values(context).join(','));
+};
 
 const asArray = (item) => {
     if (item === undefined) return [];
@@ -191,8 +195,7 @@ const parser = (key, val) => {
 
     if (output && val.hasOwnProperty('$apply')) {
         try {
-            const x = new Function("value", val.$apply);
-            output = x(output);
+            output = safeEval(val.$apply, { "value": output });
         } catch(er){}
     }
 

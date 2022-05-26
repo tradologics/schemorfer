@@ -21,8 +21,7 @@
   },
   "homepage": "https://github.com/tradologics/schemorfer#readme",
   "dependencies": {
-    "ajv": "^6.12.2",
-    "safe-eval": "^0.4.1"
+    "ajv": "^8.11.0"
   },
   "directories": {
     "example": "examples"
