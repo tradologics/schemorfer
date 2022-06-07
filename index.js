@@ -101,7 +101,7 @@ const looper = (mapper, obj) => {
                 used.push(val.$from.split('::')[0]);
             }
             let res = parser(key, val);
-            if (res) {
+            if (res !== undefined) {
                 obj[key] = res;
             }
         }
@@ -121,49 +121,61 @@ const parser = (key, val) => {
 
     // if/then/else
     if (val.hasOwnProperty('$if')) {
+        // if (!val.hasOwnProperty('$then')) {
+        //     throw new SchemorferMapError(`"${key}": $if requires presence of $then.`);
+        // }
+
+        if (!Array.isArray(val.$if)) {
+            val.$if = [val.$if];
+        }
+        let isTrues = [];
+
+        val.$if.forEach(condition => {
+            if (!condition.hasOwnProperty('$from')) {
+                throw new SchemorferMapError(`"${key}": $if requires a $from child.`);
+            }
+            if (!condition.hasOwnProperty('$is') &&
+                !condition.hasOwnProperty('$typeof') &&
+                !condition.hasOwnProperty('$condition')) {
+                throw new SchemorferMapError(`"${key}": $if requires either $is, $typeof, or $condition child.`);
+            }
+
+            const from = getProperty(source, condition.$from, getProperty(val, "$default"));
+
+            if (condition.hasOwnProperty('$is')) {
+                isTrues.push(asArray(condition.$is).includes(from));
+            }
+
+            else if (condition.hasOwnProperty('$typeof')) {
+                isTrues.push((from !== null) && (typeof from == condition.$typeof));
+            }
+
+            else if (condition.hasOwnProperty('$condition')) {
+
+                if (!condition.$condition.hasOwnProperty('$const')) {
+                    throw new SchemorferMapError(`"${key}": $if.$condition requires $const child.`);
+                }
+                const conditionType = getProperty(condition.$condition, "$type", "simple");
+
+                if (conditionType == "simple") {
+                    isTrues.push(safeEval("from " + condition.$condition.$const, { "from": from }));
+                }
+                else if (conditionType == "from") {
+                    let prop = condition.$condition.$const.split(/(=|<|>| |\*\/|\^|%|\++|\-+)/).slice(-1).pop();
+                    let propValue = getProperty(source, prop);
+                    let cond = condition.$condition.$const.replace(prop, typeof propValue == "string" ? `'${propValue}'` : propValue);
+                    isTrues.push(safeEval("from " + condition, { "from": from, "cond": condition }));
+                }
+            }
+        });
+
+        isTrues = new Set(isTrues);
+        const isTrue = isTrues.size == 1 && isTrues.has(true);
+
         if (!val.hasOwnProperty('$then')) {
-            throw new SchemorferMapError(`"${key}": $if requires presence of $then.`);
+            output = isTrue;
         }
-        if (!val.$if.hasOwnProperty('$from')) {
-            throw new SchemorferMapError(`"${key}": $if requires a $from child.`);
-        }
-        if (!val.$if.hasOwnProperty('$is') &&
-            !val.$if.hasOwnProperty('$typeof') &&
-            !val.$if.hasOwnProperty('$condition')) {
-            throw new SchemorferMapError(`"${key}": $if requires either $is, $typeof, or $condition child.`);
-        }
-
-        const from = getProperty(source, val.$if.$from, getProperty(val, "$default"));
-        let isTrue = false;
-
-        if (val.$if.hasOwnProperty('$is')) {
-            isTrue = asArray(val.$if.$is).includes(from);
-        }
-
-        else if (val.$if.hasOwnProperty('$typeof')) {
-            isTrue = (from !== null) && (typeof from == val.$if.$typeof);
-        }
-
-        else if (val.$if.hasOwnProperty('$condition')) {
-
-            if (!val.$if.$condition.hasOwnProperty('$const')) {
-                throw new SchemorferMapError(`"${key}": $if.$condition requires $const child.`);
-            }
-            const conditionType = getProperty(val.$if.$condition, "$type", "simple");
-
-            if (conditionType == "simple") {
-                isTrue = safeEval("from " + val.$if.$condition.$const, { "from": from });
-            }
-            else if (conditionType == "from") {
-                let prop = val.$if.$condition.$const.split(/(=|<|>| |\*\/|\^|%|\++|\-+)/).slice(-1).pop();
-                let propValue = getProperty(source, prop);
-                let condition = val.$if.$condition.$const.replace(prop, typeof propValue == "string" ? `'${propValue}'` : propValue);
-                isTrue = safeEval("from " + condition, { "from": from, "condition": condition });
-            }
-
-        }
-
-        if (isTrue) {
+        else if (isTrue) {
             output = (Object.keys(val.$then)[0] == "$from") ? getProperty(source, val.$then.$from) : val.$then.$value;
         }
         else if (val.hasOwnProperty('$else')) {
