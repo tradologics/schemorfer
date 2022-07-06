@@ -22,7 +22,7 @@ const fs = require('fs');
 const Ajv = require('ajv');
 // const { X509Certificate } = require('crypto');
 
-const ajv = new Ajv({ allErrors: true, useDefaults: true });
+const ajv = new Ajv({ allErrors: true, allowUnionTypes: true, useDefaults: true });
 
 let source = {}, used = [], newjson = {};
 
